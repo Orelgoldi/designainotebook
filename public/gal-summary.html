@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3 עקרונות קריטיים ליצירת חוויות מעולות עם AI - גל דולב</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Heebo', sans-serif;
+    background: #08080c;
+    color: #eeedf2;
+    line-height: 1.7;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Ambient glows ── */
+  .glow-1, .glow-2, .glow-3 {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(100px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .glow-1 {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(200,85,61,0.13) 0%, transparent 70%);
+    top: -180px; right: -120px;
+  }
+  .glow-2 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(56,189,248,0.06) 0%, transparent 70%);
+    bottom: -80px; left: -80px;
+  }
+  .glow-3 {
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(200,85,61,0.07) 0%, transparent 70%);
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 52px 24px 80px;
+  }
+
+  /* ── Hero + Thesis unified ── */
+  .hero-block {
+    text-align: center;
+    margin-bottom: 44px;
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #c8553d;
+    border: 1px solid rgba(200,85,61,0.25);
+    border-radius: 100px;
+    padding: 5px 16px;
+    margin-bottom: 24px;
+  }
+
+  h1 {
+    font-size: clamp(1.9rem, 5.5vw, 2.6rem);
+    font-weight: 900;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+    background: linear-gradient(160deg, #ffffff 30%, #8a8a9a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .author {
+    font-size: 0.8rem;
+    color: #555;
+    font-weight: 400;
+    margin-bottom: 32px;
+  }
+
+  .thesis-text {
+    font-size: 0.88rem;
+    color: #777;
+    line-height: 1.9;
+    max-width: 540px;
+    margin: 0 auto 20px;
+  }
+
+  .punchline {
+    font-size: clamp(1.05rem, 2.4vw, 1.25rem);
+    font-weight: 700;
+    line-height: 1.6;
+    color: #eeedf2;
+  }
+
+  .punchline .highlight {
+    background: linear-gradient(135deg, #c8553d, #e8845a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .divider {
+    width: 36px;
+    height: 2px;
+    background: linear-gradient(90deg, #c8553d, #e07a5f);
+    margin: 36px auto;
+    border-radius: 2px;
+  }
+
+  /* ── Cards ── */
+  .principles {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 48px;
+  }
+
+  .card {
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 18px;
+    padding: 32px 28px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 120px; height: 120px;
+    background: radial-gradient(circle at top right, rgba(200,85,61,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .card:hover {
+    border-color: rgba(200,85,61,0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 48px rgba(0,0,0,0.3);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .num {
+    flex-shrink: 0;
+    width: 30px; height: 30px;
+    background: linear-gradient(135deg, #c8553d 0%, #e07a5f 100%);
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.8rem;
+    color: #fff;
+    box-shadow: 0 2px 12px rgba(200,85,61,0.3);
+  }
+
+  .card h2 {
+    font-size: 1.08rem;
+    font-weight: 700;
+    line-height: 1.45;
+    flex: 1;
+  }
+
+  .card .text {
+    color: #7a7a8a;
+    font-size: 0.85rem;
+    line-height: 1.85;
+    margin-bottom: 4px;
+  }
+
+  .card .text em {
+    font-style: normal;
+    color: #b0b0c0;
+  }
+
+  /* ── Accent / money lines ── */
+  .accent-line {
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin: 18px 0;
+    line-height: 1.5;
+    background: linear-gradient(135deg, #f0eff4, #c8553d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── Tips ── */
+  .tip {
+    margin-top: 16px;
+    padding: 14px 18px;
+    background: rgba(200,85,61,0.05);
+    border: 1px solid rgba(200,85,61,0.1);
+    border-radius: 12px;
+    font-size: 0.82rem;
+    line-height: 1.85;
+    color: #999;
+    position: relative;
+  }
+
+  .tip::before {
+    content: '';
+    position: absolute;
+    top: 14px; right: -1px;
+    width: 3px; height: 20px;
+    background: linear-gradient(180deg, #c8553d, transparent);
+    border-radius: 2px;
+  }
+
+  .tip-label {
+    display: inline-block;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #c8553d;
+    margin-bottom: 4px;
+  }
+
+  /* ── OS grid ── */
+  .os-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 16px 0;
+  }
+
+  .os-chip {
+    background: rgba(255,255,255,0.035);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    padding: 18px 14px;
+    text-align: center;
+    transition: border-color 0.3s, background 0.3s;
+  }
+
+  .os-chip:hover {
+    border-color: rgba(200,85,61,0.2);
+    background: rgba(255,255,255,0.05);
+  }
+
+  .os-chip .icon {
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .os-chip .label {
+    font-weight: 700;
+    font-size: 0.82rem;
+    color: #ddd;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .os-chip .desc {
+    font-size: 0.7rem;
+    color: #666;
+    line-height: 1.5;
+  }
+
+  /* ── Visual anchors for cards 2 & 3 ── */
+  .card-visual {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 14px 0;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.025);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .card-visual .v-icon {
+    font-size: 1.6rem;
+    flex-shrink: 0;
+  }
+
+  .card-visual .v-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .v-tag {
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: #888;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 6px;
+    padding: 3px 10px;
+  }
+
+  /* ── QR footer ── */
+  .closer {
+    text-align: center;
+    padding-top: 8px;
+  }
+
+  .qr-card {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 28px 36px;
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 18px;
+    transition: border-color 0.3s;
+  }
+
+  .qr-card:hover {
+    border-color: rgba(200,85,61,0.2);
+  }
+
+  .qr-img {
+    width: 120px; height: 120px;
+    border-radius: 14px;
+    background: #fff;
+    padding: 6px;
+  }
+
+  .qr-text {
+    font-size: 0.78rem;
+    color: #666;
+    font-weight: 400;
+  }
+
+  /* ── Scroll reveal ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 520px) {
+    .page { padding: 36px 16px 60px; }
+    .card { padding: 24px 20px; }
+    .os-grid { grid-template-columns: 1fr; gap: 8px; }
+    .os-chip { display: flex; align-items: center; gap: 12px; text-align: right; padding: 12px 14px; }
+    .os-chip .icon { margin-bottom: 0; font-size: 1.2rem; }
+    .card-visual { flex-direction: column; align-items: flex-start; }
+    .accent-line { font-size: 1rem; }
+  }
+
+  @media print {
+    body { background: #fff; color: #111; }
+    .glow-1, .glow-2, .glow-3 { display: none; }
+    .card { border: 1px solid #ddd; break-inside: avoid; box-shadow: none; transform: none; }
+    .card::before { display: none; }
+    h1 { background: none; -webkit-text-fill-color: #111; }
+    .accent-line { background: none; -webkit-text-fill-color: #111; }
+    .tip { background: #f5f5f5; border-color: #ddd; }
+    .reveal { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="glow-1"></div>
+<div class="glow-2"></div>
+<div class="glow-3"></div>
+
+<div class="page">
+
+  <!-- Hero + Thesis as one unit -->
+  <header class="hero-block reveal">
+    <div class="badge">סיכום הרצאה</div>
+    <h1>3 עקרונות קריטיים<br>ליצירת חוויות מעולות עם AI</h1>
+    <div class="author">גל דולב</div>
+    <p class="thesis-text">
+      AI עונה לפי סבירות סטטיסטית. הוא נועד לקלוע לממוצע.<br>
+      אבל חדשנות, סאבטקסט, חוויית משתמש טובה - זו לא הממוצע. זו סטיית תקן.
+    </p>
+    <div class="punchline">
+      <span class="highlight">אז מה עושים?</span>
+    </div>
+  </header>
+
+  <div class="divider"></div>
+
+  <div class="principles">
+
+    <!-- Card 1: OS -->
+    <article class="card reveal">
+      <div class="card-header">
+        <div class="num">1</div>
+        <h2>בנו מערכת הפעלה אחת - עם עיניים, זיכרון, וידיים</h2>
+      </div>
+      <p class="text">
+        בחרו כלי AI אחד. חברו אליו הכל. הפכו אותו למערכת ההפעלה שלכם:
+      </p>
+      <div class="os-grid">
+        <div class="os-chip">
+          <span class="icon">👁</span>
+          <div>
+            <span class="label">עיניים</span>
+            <span class="desc">דפדפן, מחקר מתחרים, צילום מסכים</span>
+          </div>
+        </div>
+        <div class="os-chip">
+          <span class="icon">🧠</span>
+          <div>
+            <span class="label">זיכרון</span>
+            <span class="desc">פיגמה, ג׳ירה, סלאק, דאטה, דיזיין סיסטם</span>
+          </div>
+        </div>
+        <div class="os-chip">
+          <span class="icon">🤲</span>
+          <div>
+            <span class="label">ידיים</span>
+            <span class="desc">קוד, פרוטוטייפים, אנימציות</span>
+          </div>
+        </div>
+      </div>
+      <p class="text">
+        במקום 20 חלונות שחותכים את תשומת הלב - מקום אחד. פלואו רציף. משימות מונוטוניות רצות ברקע. תקרת הזכוכית של הביצוע נשברת.
+      </p>
+      <div class="tip">
+        <span class="tip-label">שימו לב</span><br>
+        אתם לא צריכים להפוך למפתחים. הקוד הוא המדיום. ה-AI כותב אותו. אתם מכוונים.
+      </div>
+    </article>
+
+    <!-- Card 2: Wander -->
+    <article class="card reveal">
+      <div class="card-header">
+        <div class="num">2</div>
+        <h2>תנו למוח לנדוד - לפני שתפתחו את הכלי</h2>
+      </div>
+      <p class="text">
+        חדשנות לא מתחילה מרעיון מבריק. היא מתחילה מבלאגן - 17 כדורים באוויר מ-17 עולמות שונים. ה-Default Mode Network במוח - הרשת שפעילה כשאנחנו <em>לא</em> ממוקדים במשימה - היא שמחברת בין הדברים הרחוקים ויוצרת משהו חדש.
+      </p>
+      <div class="card-visual">
+        <span class="v-icon">🎯</span>
+        <div class="v-items">
+          <span class="v-tag">שיחה עם משתמש</span>
+          <span class="v-tag">תחושת בטן</span>
+          <span class="v-tag">דאטה</span>
+          <span class="v-tag">ריב בבוקר</span>
+          <span class="v-tag">פריים מפיגמה</span>
+          <span class="v-tag">זיכרון ישן</span>
+        </div>
+      </div>
+      <p class="accent-line">AI לא יכול לנדוד. אתם כן.</p>
+      <div class="tip">
+        <span class="tip-label">טיפ פרקטי</span><br>
+        לפני הפרומפט הראשון: דף A4, עט, 10 דקות. תנו לעצמכם לחשוב קודם. כשתפתחו את הכלי - תנו לו שלושה בולטים ייחודיים <em>לכם</em>. ככה אתם נשארים הקול הראשון בחדר.
+      </div>
+    </article>
+
+    <!-- Card 3: Body -->
+    <article class="card reveal">
+      <div class="card-header">
+        <div class="num">3</div>
+        <h2>סמכו על הגוף - הוא יודע דברים שאי אפשר לכתוב בפרומפט</h2>
+      </div>
+      <p class="text">
+        מחקר השווה מומחים אנושיים מול AI בניתוח ראיונות עומק. בשאלות מורכבות - המומחים דורגו גבוה יותר. לא כי היו מדויקים יותר סטטיסטית, אלא כי קראו סאבטקסט, רגש, דברים שהמערכת העצבית מבינה אבל אי אפשר לנסח במילים.
+      </p>
+      <div class="card-visual">
+        <span class="v-icon">🧬</span>
+        <div class="v-items">
+          <span class="v-tag">סאבטקסט</span>
+          <span class="v-tag">רגש</span>
+          <span class="v-tag">שפת גוף</span>
+          <span class="v-tag">אינטואיציה</span>
+          <span class="v-tag">ידע סמוי</span>
+        </div>
+      </div>
+      <p class="accent-line">ידע סמוי. חי בגוף. אי אפשר להעביר - לא במילים, לא בתמונה, לא בשום פרומפט.</p>
+      <div class="tip">
+        <span class="tip-label">טיפ פרקטי</span><br>
+        סמנו רגעים של ״יודע שזה לא עובד, לא יודע למה.״ אלה הרגעים שבהם אתם חייבים להישאר בחדר ולשהות בבעיה. AI יבצע - אחרי שתחליטו.
+      </div>
+    </article>
+
+  </div>
+
+  <!-- QR in its own card -->
+  <footer class="closer reveal">
+    <div class="qr-card">
+      <img src="qr-sample.png" alt="QR Code" class="qr-img">
+      <span class="qr-text">סרקו כדי להתחיל ליצור - כבר מחר בבוקר</span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
