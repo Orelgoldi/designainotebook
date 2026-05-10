@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>סיכום הרצאה | Design AI 7.0</title>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:   #041042;
+      --purple: #981fb6;
+      --cyan:   #2cffdf;
+      --white:  #ffffff;
+      --muted:  rgba(255,255,255,0.5);
+      --card:   rgba(255,255,255,0.055);
+      --border: rgba(255,255,255,0.1);
+    }
+    html, body { min-height: 100dvh; }
+    body {
+      font-family: 'Assistant', sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Background ── */
+    .bg { position: fixed; inset: 0; z-index: 0; overflow: hidden;
+      background: radial-gradient(ellipse at 80% 10%, #0c0530 0%, var(--navy) 55%); }
+    .blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.45; }
+    .blob-1 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(152,31,182,0.6), transparent 70%); top: -100px; left: -80px; }
+    .blob-2 { width: 280px; height: 280px; background: radial-gradient(circle, rgba(44,255,223,0.3), transparent 70%); bottom: 0; right: -60px; }
+    .grid-bg { position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);
+      background-size: 52px 52px; }
+
+    /* ── Top nav ── */
+    .topnav {
+      position: relative; z-index: 20;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 28px; max-width: 1200px; margin: 0 auto;
+    }
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+      border-radius: 10px; padding: 9px 16px;
+      font-family: 'Assistant', sans-serif; font-size: 14px; font-weight: 700;
+      color: var(--muted); cursor: pointer; text-decoration: none;
+      transition: all 0.2s;
+    }
+    .back-btn:hover { border-color: rgba(255,255,255,0.25); color: var(--white); }
+    .nav-logo { width: 80px; filter: brightness(0) invert(1); opacity: 0.8; }
+    .nav-arrows { display: flex; gap: 8px; }
+    .nav-arr {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 16px; color: var(--muted);
+      transition: all 0.2s; text-decoration: none;
+    }
+    .nav-arr:hover { border-color: rgba(255,255,255,0.3); color: var(--white); }
+    .nav-arr.disabled { opacity: 0.3; pointer-events: none; }
+
+    /* ── Main layout ── */
+    .page-wrap {
+      position: relative; z-index: 2;
+      max-width: 1200px; margin: 0 auto;
+      padding: 0 28px 60px;
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar { position: sticky; top: 24px; }
+    .sp-photo-wrap {
+      width: 100%; border-radius: 18px; overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      margin-bottom: 20px;
+    }
+
+    /* ── Tablet ── */
+    @media (max-width: 860px) {
+      .page-wrap { grid-template-columns: 1fr; gap: 24px; padding: 0 20px 48px; }
+      .sidebar { position: static; display: flex; gap: 18px; align-items: flex-start; }
+      .sp-photo-wrap { flex: 0 0 130px; width: 130px; margin-bottom: 0; }
+      .sidebar-info { flex: 1; }
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 520px) {
+      .page-wrap { padding: 0 14px 40px; gap: 20px; }
+      .sidebar { flex-direction: column; }
+      .sp-photo-wrap { flex: none; width: 100%; max-width: 200px; }
+    }
+    .sp-photo { width: 100%; aspect-ratio: 3/4; object-fit: cover; object-position: top; display: block; }
+    .sidebar-info {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 20px;
+    }
+    .si-tag {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--cyan); margin-bottom: 10px;
+    }
+    .si-name { font-size: 20px; font-weight: 800; line-height: 1.2; margin-bottom: 4px; }
+    .si-role { font-size: 13px; color: var(--muted); margin-bottom: 16px; line-height: 1.5; }
+    .divider { height: 1px; background: rgba(255,255,255,0.08); margin: 16px 0; }
+    .si-talk-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 6px; }
+    .si-talk { font-size: 15px; font-weight: 700; line-height: 1.45; color: var(--white); }
+
+    /* ── Download btn ── */
+    .dl-btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; margin-top: 16px;
+      padding: 12px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--purple), #7b1598);
+      color: var(--white); font-family: 'Assistant', sans-serif;
+      font-size: 14px; font-weight: 700; cursor: pointer;
+      border: none; text-decoration: none;
+      box-shadow: 0 4px 20px rgba(152,31,182,0.4);
+      transition: all 0.2s;
+    }
+    .dl-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(152,31,182,0.55); }
+
+    /* ── PDF Viewer ── */
+    .viewer-wrap { min-height: 600px; }
+    .viewer-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .viewer-title {
+      font-size: 13px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--muted);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .viewer-title::before { content:''; width:3px; height:14px; background:var(--purple); border-radius:2px; }
+    .pdf-frame-wrap {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 16px; overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+    .pdf-frame {
+      width: 100%; height: 82vh; min-height: 500px;
+      border: none; display: block;
+    }
+    @media (max-width: 860px) { .pdf-frame { height: 70vh; } }
+
+    /* ── No PDF state ── */
+    .no-pdf {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      height: 400px; text-align: center;
+      background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.12);
+      border-radius: 16px; gap: 14px;
+    }
+    .no-pdf-icon { font-size: 48px; }
+    .no-pdf-title { font-size: 18px; font-weight: 700; }
+    .no-pdf-sub { font-size: 14px; color: var(--muted); }
+
+    /* ── Mobile PDF notice ── */
+    .mobile-pdf-notice {
+      display: none;
+      background: rgba(44,255,223,0.08); border: 1px solid rgba(44,255,223,0.2);
+      border-radius: 12px; padding: 14px 16px;
+      font-size: 13px; color: var(--cyan); margin-bottom: 14px; line-height: 1.6;
+    }
+    @media (max-width: 640px) { .mobile-pdf-notice { display: block; } }
+  </style>
+</head>
+<body>
+<div class="bg" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="grid-bg"></div>
+</div>
+
+<nav class="topnav">
+  <a href="/" class="back-btn">→ כל המרצים</a>
+  <a href="/"><img src="/logo.svg" class="nav-logo" alt="Design AI"></a>
+  <div class="nav-arrows">
+    <a class="nav-arr" id="prevBtn" title="מרצה קודם">→</a>
+    <a class="nav-arr" id="nextBtn" title="מרצה הבא">←</a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sp-photo-wrap">
+      <img class="sp-photo" id="spPhoto" src="" alt="">
+    </div>
+    <div class="sidebar-info">
+      <div class="si-tag">DESIGN AI 7.0 · מרצה</div>
+      <div class="si-name" id="spName"></div>
+      <div class="si-role" id="spRole"></div>
+      <div class="divider"></div>
+      <div class="si-talk-label">נושא ההרצאה</div>
+      <div class="si-talk" id="spTalk"></div>
+      <a class="dl-btn" id="dlBtn" href="#" download style="display:none">
+        ⬇ הורד סיכום PDF
+      </a>
+    </div>
+  </aside>
+
+  <!-- PDF Viewer -->
+  <div class="viewer-wrap">
+    <div class="viewer-header">
+      <div class="viewer-title">סיכום הרצאה</div>
+    </div>
+    <div class="mobile-pdf-notice">
+      💡 במכשיר נייד — אם ה-PDF לא נפתח אוטומטית, לחצו על "הורד סיכום PDF" בצד שמאל
+    </div>
+    <div id="viewerContent"></div>
+  </div>
+</div>
+
+<script>
+  const SPEAKERS = [
+    { id: 'daniel',   name: 'דניאל בוארון',         role: 'מייסד DESIGN AI',                          img: '/speakers/daniel.png',    talk: 'דברי פתיחה — DESIGN TO CODE' },
+    { id: 'omri',     name: 'עומרי הרמן',            role: 'Founder at Spring',                         img: 'https://designai.co.il/wp-content/uploads/2026/04/%D7%A2%D7%9E%D7%A8%D7%99.png', talk: 'The Product is The New Workspace' },
+    { id: 'gal',      name: 'גל דולב',               role: 'AI Lead & PM @Guidde',                      img: '/speakers/gal.png',       talk: '3 עקרונות קריטיים לבניית חוויות משתמש טובות בעידן ה-AI' },
+    { id: 'tal',      name: 'טל זגורי',              role: 'AI Storyteller | מנהל מוצר',               img: '/speakers/tal.png',       talk: 'סטוריטלינג בעולם החדש: איך למכור את הרעיונות שלכם ב-2 דקות?' },
+    { id: 'shira',    name: 'שירה וינברג הראל',      role: 'Product and AI Expert, Beyond AI',          img: '/speakers/shira.png',     talk: 'מנטור לכל עובד.ת: איך לייצר נבחרת מנטורים פנים-ארגונית בעזרת AI' },
+    { id: 'yaakov',   name: 'ד"ר יעקב גרינשפן',     role: 'UX Strategy',                               img: '/speakers/yaakov.png',    talk: 'אהבה, אמון, AI: איך לבנות אפליקציות מבוססות AI שאנשים יאהבו', url: 'https://www.uxux.co.il/trusttalk' },
+    { id: 'ron',      name: 'רון ברנוב',             role: 'Creative Workflow Advocate, Weavy',          img: '/speakers/ron.png',       talk: 'Workflow First: כך מעצבים תהליך יצירתי עם AI ו-Weavy' },
+    { id: 'sheli',    name: 'שלי אור גיסר',          role: 'Gen AI Design Lead, GITAM BBDO',            img: '/speakers/sheli.png',     talk: 'Creative Engineering — הנדסת חשיבה עיצובית למוצר' },
+    { id: 'ido',      name: 'עידו זייפמן וקרן שגב',  role: 'Co-Founder & Co-CEO, Kido',                 img: '/speakers/ido-keren.png', talk: 'סוף כל סוף העבודה הידנית ב-Design System' },
+    { id: 'inbal',    name: 'ענבל ברקוביץ',          role: 'Head of UX, Ocean',                          img: '/speakers/inbal.png',     talk: 'עיצוב בעידן ה-GenUI: פרק חדש באבולוציה של האינטרקציה' },
+  ];
+
+  const params = new URLSearchParams(location.search);
+  const currentId = params.get('id') || SPEAKERS[0].id;
+  const idx = SPEAKERS.findIndex(s => s.id === currentId);
+  const sp = SPEAKERS[idx] || SPEAKERS[0];
+
+  // Populate speaker info
+  document.getElementById('spPhoto').src = sp.img;
+  document.getElementById('spPhoto').alt = sp.name;
+  document.getElementById('spName').textContent = sp.name;
+  document.getElementById('spRole').textContent = sp.role;
+  document.getElementById('spTalk').textContent = sp.talk;
+  document.title = `${sp.name} | Design AI 7.0`;
+
+  // Prev / Next
+  const prevSp = SPEAKERS[idx - 1];
+  const nextSp = SPEAKERS[idx + 1];
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  if (prevSp) prevBtn.href = `/speaker.html?id=${prevSp.id}`;
+  else prevBtn.classList.add('disabled');
+  if (nextSp) nextBtn.href = `/speaker.html?id=${nextSp.id}`;
+  else nextBtn.classList.add('disabled');
+
+  // Load PDF
+  const pdfUrl = `/pdfs/${sp.id}.pdf`;
+
+  async function checkAndRenderPdf() {
+    // External URL — embed directly
+    if (sp.url) {
+      const dlBtn = document.getElementById('dlBtn');
+      dlBtn.href = sp.url; dlBtn.textContent = '🔗 פתח באתר המרצה'; dlBtn.removeAttribute('download'); dlBtn.style.display = 'flex';
+      document.getElementById('viewerContent').innerHTML = `
+        <div class="pdf-frame-wrap">
+          <iframe class="pdf-frame" src="${sp.url}" title="סיכום הרצאה — ${sp.name}"></iframe>
+        </div>`;
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/pdfs');
+      const list = await res.json();
+      const hasPdf = list.includes(sp.id + '.pdf');
+
+      if (hasPdf) {
+        document.getElementById('dlBtn').href = pdfUrl;
+        document.getElementById('dlBtn').style.display = 'flex';
+        document.getElementById('viewerContent').innerHTML = `
+          <div class="pdf-frame-wrap">
+            <iframe class="pdf-frame" src="${pdfUrl}" title="סיכום הרצאה — ${sp.name}"></iframe>
+          </div>`;
+      } else {
+        document.getElementById('viewerContent').innerHTML = `
+          <div class="no-pdf">
+            <div class="no-pdf-icon">📄</div>
+            <div class="no-pdf-title">הסיכום בהכנה</div>
+            <div class="no-pdf-sub">סיכום ההרצאה של ${sp.name} יעלה בקרוב</div>
+          </div>`;
+      }
+    } catch {
+      document.getElementById('viewerContent').innerHTML = `
+        <div class="no-pdf">
+          <div class="no-pdf-icon">⚠️</div>
+          <div class="no-pdf-title">שגיאה בטעינה</div>
+          <div class="no-pdf-sub">נסו לרענן את הדף</div>
+        </div>`;
+    }
+  }
+
+  checkAndRenderPdf();
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "design-ai-lectures",
+  "version": "1.0.0",
+  "description": "Design AI 7.0 — סיכומי הרצאות",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
