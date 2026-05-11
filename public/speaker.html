@@ -262,10 +262,20 @@
     if (sp.url) {
       const dlBtn = document.getElementById('dlBtn');
       dlBtn.href = sp.url; dlBtn.textContent = '🔗 פתח באתר המרצה'; dlBtn.removeAttribute('download'); dlBtn.style.display = 'flex';
-      document.getElementById('viewerContent').innerHTML = `
-        <div class="pdf-frame-wrap">
-          <iframe class="pdf-frame" src="${sp.url}" title="סיכום הרצאה — ${sp.name}"></iframe>
-        </div>`;
+      const isMobile = window.innerWidth <= 860;
+      if (isMobile) {
+        document.getElementById('viewerContent').innerHTML = `
+          <div class="no-pdf-box" style="text-align:center; padding: 48px 24px;">
+            <div style="font-size:2.5rem; margin-bottom:16px;">🖥️</div>
+            <div class="no-pdf-title" style="margin-bottom:10px;">המצגת נפתחת בדסקטופ בלבד</div>
+            <div class="no-pdf-sub">לחצו על הכפתור למטה כדי לפתוח את הקישור בדפדפן שולחן העבודה</div>
+          </div>`;
+      } else {
+        document.getElementById('viewerContent').innerHTML = `
+          <div class="pdf-frame-wrap">
+            <iframe class="pdf-frame" src="${sp.url}" title="סיכום הרצאה — ${sp.name}"></iframe>
+          </div>`;
+      }
       return;
     }
 
