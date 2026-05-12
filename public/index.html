@@ -223,8 +223,8 @@
           </div>
         </a>`;
     });
-    // Insert promo card after שחר (index 5)
-    cards.splice(6, 0, PROMO_CARD);
+    // Promo card last, after all speakers
+    cards.push(PROMO_CARD);
     document.getElementById('speakerGrid').innerHTML = cards.join('');
   }
 
