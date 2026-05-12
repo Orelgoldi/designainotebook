@@ -99,6 +99,48 @@
     .sp-cta-arrow { font-size: 14px; color: var(--cyan); }
     .sp-no-pdf { color: rgba(255,255,255,0.3); }
 
+    /* ── Promo card ── */
+    .promo-card {
+      position: relative; border-radius: 18px; overflow: hidden;
+      background: linear-gradient(135deg, #0a0d3a 0%, #160836 50%, #0a1a3a 100%);
+      border: 1px solid rgba(44,255,223,0.25);
+      box-shadow: 0 0 32px rgba(44,255,223,0.06), inset 0 0 40px rgba(152,31,182,0.08);
+      padding: 22px 18px;
+      display: flex; flex-direction: column; gap: 12px;
+      aspect-ratio: 3/4;
+      text-decoration: none; color: var(--white);
+      transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+    }
+    .promo-card:hover { transform: translateY(-6px); border-color: rgba(44,255,223,0.5); box-shadow: 0 16px 48px rgba(0,0,0,0.4), 0 0 32px rgba(44,255,223,0.12); }
+    .promo-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(44,255,223,0.1); border: 1px solid rgba(44,255,223,0.3);
+      border-radius: 20px; padding: 4px 12px;
+      font-size: 9px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--cyan); width: fit-content;
+    }
+    .promo-badge-dot { width: 5px; height: 5px; background: var(--cyan); border-radius: 50%; animation: pulse 2s infinite; }
+    .promo-title { font-size: 15px; font-weight: 800; line-height: 1.35; color: var(--white); }
+    .promo-title span { color: var(--cyan); }
+    .promo-host { font-size: 11px; color: var(--muted); margin-top: -4px; }
+    .promo-divider { height: 1px; background: rgba(255,255,255,0.08); }
+    .promo-items { display: flex; flex-direction: column; gap: 7px; flex: 1; }
+    .promo-item {
+      display: flex; align-items: flex-start; gap: 7px;
+      font-size: 11px; line-height: 1.4; color: rgba(255,255,255,0.8);
+    }
+    .promo-item-dot { width: 5px; height: 5px; background: var(--cyan); border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+    .promo-cta {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      background: linear-gradient(135deg, var(--cyan), #1fd4b8);
+      color: #041042; border-radius: 10px; padding: 10px;
+      font-size: 12px; font-weight: 800; margin-top: auto;
+    }
+    .promo-duration {
+      font-size: 10px; font-weight: 700; color: var(--cyan);
+      display: flex; align-items: center; gap: 5px;
+    }
+
     /* ── Footer ── */
     footer { position: relative; z-index: 2; text-align: center; padding-bottom: 32px; color: var(--muted); font-size: 13px; }
   </style>
@@ -148,8 +190,24 @@
     renderGrid();
   }
 
+  const PROMO_CARD = `
+    <a class="promo-card" href="https://designai.co.il" target="_blank" rel="noopener">
+      <div class="promo-badge"><span class="promo-badge-dot"></span>ללא עלות · אונליין</div>
+      <div class="promo-title">מפגש עם<br><span>דניאל בוארון</span></div>
+      <div class="promo-host">מייסד Design AI</div>
+      <div class="promo-duration">⏱ שעה וחצי</div>
+      <div class="promo-divider"></div>
+      <div class="promo-items">
+        <div class="promo-item"><span class="promo-item-dot"></span>שאלות ותשובות</div>
+        <div class="promo-item"><span class="promo-item-dot"></span>עבודה עם Claude Code + Skailz</div>
+        <div class="promo-item"><span class="promo-item-dot"></span>בניית סקילים נכונה</div>
+        <div class="promo-item"><span class="promo-item-dot"></span>Claude Code בטרמינל</div>
+      </div>
+      <div class="promo-cta">הירשמו עכשיו ←</div>
+    </a>`;
+
   function renderGrid() {
-    document.getElementById('speakerGrid').innerHTML = SPEAKERS.map(sp => {
+    const cards = SPEAKERS.map(sp => {
       const hasContent = sp.url || availablePdfs.includes(sp.id + '.pdf');
       return `
         <a class="sp-card" href="/speaker.html?id=${sp.id}">
@@ -163,9 +221,11 @@
               ${hasContent ? '<span class="sp-cta-arrow">←</span>' : ''}
             </div>
           </div>
-        </a>
-      `;
-    }).join('');
+        </a>`;
+    });
+    // Insert promo card after שחר (index 5)
+    cards.splice(6, 0, PROMO_CARD);
+    document.getElementById('speakerGrid').innerHTML = cards.join('');
   }
 
   init();
