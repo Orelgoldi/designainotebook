@@ -124,6 +124,7 @@
       transition: all 0.2s;
     }
     .dl-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(152,31,182,0.55); }
+    @media (max-width: 860px) { .dl-btn { display: none !important; } }
 
     /* ── PDF Viewer ── */
     .viewer-wrap { min-height: 600px; }
@@ -161,13 +162,39 @@
     .no-pdf-sub { font-size: 14px; color: var(--muted); }
 
     /* ── Mobile PDF notice ── */
-    .mobile-pdf-notice {
+    .mobile-pdf-notice { display: none; }
+
+    /* ── Mobile action card ── */
+    .mobile-action-card {
       display: none;
-      background: rgba(44,255,223,0.08); border: 1px solid rgba(44,255,223,0.2);
-      border-radius: 12px; padding: 14px 16px;
-      font-size: 13px; color: var(--cyan); margin-bottom: 14px; line-height: 1.6;
+      flex-direction: column; align-items: center;
+      gap: 14px; text-align: center;
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      border-radius: 20px; padding: 40px 24px;
     }
-    @media (max-width: 640px) { .mobile-pdf-notice { display: block; } }
+    .mobile-action-card .mac-icon { font-size: 3rem; }
+    .mobile-action-card .mac-title { font-size: 17px; font-weight: 800; }
+    .mobile-action-card .mac-sub { font-size: 13px; color: var(--muted); line-height: 1.6; max-width: 260px; }
+    .mac-btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; max-width: 280px; padding: 15px 20px;
+      border-radius: 14px; font-family: 'Assistant', sans-serif;
+      font-size: 15px; font-weight: 800; text-decoration: none;
+      cursor: pointer; border: none; transition: all 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .mac-btn-primary {
+      background: linear-gradient(135deg, var(--purple), #7b1598);
+      color: var(--white);
+      box-shadow: 0 4px 20px rgba(152,31,182,0.4);
+    }
+    .mac-btn-primary:active { transform: scale(0.97); }
+    .mac-btn-secondary {
+      background: rgba(255,255,255,0.07); border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .mac-btn-secondary:active { background: rgba(255,255,255,0.12); }
+    @media (max-width: 860px) { .mobile-action-card { display: flex; } }
   </style>
 </head>
 <body>
@@ -209,9 +236,6 @@
   <div class="viewer-wrap">
     <div class="viewer-header">
       <div class="viewer-title">סיכום הרצאה</div>
-    </div>
-    <div class="mobile-pdf-notice">
-      💡 במכשיר נייד — אם ה-PDF לא נפתח אוטומטית, לחצו על "הורד סיכום PDF" בצד שמאל
     </div>
     <div id="viewerContent"></div>
   </div>
@@ -257,18 +281,22 @@
   // Load PDF
   const pdfUrl = `/pdfs/${sp.id}.pdf`;
 
+  const isMobile = window.innerWidth <= 860;
+
   async function checkAndRenderPdf() {
-    // External URL — embed directly
+    // External URL
     if (sp.url) {
       const dlBtn = document.getElementById('dlBtn');
-      dlBtn.href = sp.url; dlBtn.textContent = '🔗 פתח באתר המרצה'; dlBtn.removeAttribute('download'); dlBtn.style.display = 'flex';
-      const isMobile = window.innerWidth <= 860;
+      dlBtn.href = sp.url; dlBtn.textContent = '🔗 פתח באתר המרצה';
+      dlBtn.removeAttribute('download'); dlBtn.style.display = 'flex';
+
       if (isMobile) {
         document.getElementById('viewerContent').innerHTML = `
-          <div class="no-pdf-box" style="text-align:center; padding: 48px 24px;">
-            <div style="font-size:2.5rem; margin-bottom:16px;">🖥️</div>
-            <div class="no-pdf-title" style="margin-bottom:10px;">המצגת נפתחת בדסקטופ בלבד</div>
-            <div class="no-pdf-sub">לחצו על הכפתור למטה כדי לפתוח את הקישור בדפדפן שולחן העבודה</div>
+          <div class="mobile-action-card">
+            <div class="mac-icon">🖥️</div>
+            <div class="mac-title">המצגת נפתחת בדסקטופ בלבד</div>
+            <div class="mac-sub">תוכן זה מיועד לצפייה על מסך מחשב</div>
+            <a class="mac-btn mac-btn-primary" href="${sp.url}" target="_blank" rel="noopener">🔗 פתח קישור</a>
           </div>`;
       } else {
         document.getElementById('viewerContent').innerHTML = `
@@ -287,10 +315,22 @@
       if (hasPdf) {
         document.getElementById('dlBtn').href = pdfUrl;
         document.getElementById('dlBtn').style.display = 'flex';
-        document.getElementById('viewerContent').innerHTML = `
-          <div class="pdf-frame-wrap">
-            <iframe class="pdf-frame" src="${pdfUrl}" title="סיכום הרצאה — ${sp.name}"></iframe>
-          </div>`;
+
+        if (isMobile) {
+          document.getElementById('viewerContent').innerHTML = `
+            <div class="mobile-action-card">
+              <div class="mac-icon">📄</div>
+              <div class="mac-title">סיכום ההרצאה מוכן</div>
+              <div class="mac-sub">פתחו את הסיכום בדפדפן או הורידו אותו למכשיר שלכם</div>
+              <a class="mac-btn mac-btn-primary" href="${pdfUrl}" target="_blank" rel="noopener">📖 פתח סיכום</a>
+              <a class="mac-btn mac-btn-secondary" href="${pdfUrl}" download>⬇ הורד PDF</a>
+            </div>`;
+        } else {
+          document.getElementById('viewerContent').innerHTML = `
+            <div class="pdf-frame-wrap">
+              <iframe class="pdf-frame" src="${pdfUrl}" title="סיכום הרצאה — ${sp.name}"></iframe>
+            </div>`;
+        }
       } else {
         document.getElementById('viewerContent').innerHTML = `
           <div class="no-pdf">
